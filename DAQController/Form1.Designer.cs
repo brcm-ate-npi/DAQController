@@ -28,27 +28,32 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.tbxSwCommand = new System.Windows.Forms.TextBox();
+            this.btnWriteSwitch = new System.Windows.Forms.Button();
             this.physicalChannelComboBox = new System.Windows.Forms.ComboBox();
+            this.cbxEnableZTM = new System.Windows.Forms.CheckBox();
+            this.dgv = new System.Windows.Forms.DataGridView();
+            this.txtFilter = new System.Windows.Forms.TextBox();
+            this.txtLog = new System.Windows.Forms.TextBox();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
             this.SuspendLayout();
             // 
-            // textBox1
+            // tbxSwCommand
             // 
-            this.textBox1.Location = new System.Drawing.Point(12, 38);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(558, 20);
-            this.textBox1.TabIndex = 0;
+            this.tbxSwCommand.Location = new System.Drawing.Point(12, 38);
+            this.tbxSwCommand.Name = "tbxSwCommand";
+            this.tbxSwCommand.Size = new System.Drawing.Size(558, 20);
+            this.tbxSwCommand.TabIndex = 0;
             // 
-            // button1
+            // btnWriteSwitch
             // 
-            this.button1.Location = new System.Drawing.Point(588, 38);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(100, 29);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Write";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnWriteSwitch.Location = new System.Drawing.Point(588, 38);
+            this.btnWriteSwitch.Name = "btnWriteSwitch";
+            this.btnWriteSwitch.Size = new System.Drawing.Size(100, 29);
+            this.btnWriteSwitch.TabIndex = 1;
+            this.btnWriteSwitch.Text = "Write";
+            this.btnWriteSwitch.UseVisualStyleBackColor = true;
+            this.btnWriteSwitch.Click += new System.EventHandler(this.btnWriteSwitch_Click);
             // 
             // physicalChannelComboBox
             // 
@@ -58,16 +63,60 @@
             this.physicalChannelComboBox.Size = new System.Drawing.Size(121, 21);
             this.physicalChannelComboBox.TabIndex = 2;
             // 
+            // cbxEnableZTM
+            // 
+            this.cbxEnableZTM.AutoSize = true;
+            this.cbxEnableZTM.Location = new System.Drawing.Point(139, 11);
+            this.cbxEnableZTM.Name = "cbxEnableZTM";
+            this.cbxEnableZTM.Size = new System.Drawing.Size(106, 17);
+            this.cbxEnableZTM.TabIndex = 3;
+            this.cbxEnableZTM.Text = "Enable ZTM-325";
+            this.cbxEnableZTM.UseVisualStyleBackColor = true;
+            // 
+            // dgv
+            // 
+            this.dgv.AllowDrop = true;
+            this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv.Location = new System.Drawing.Point(12, 113);
+            this.dgv.Name = "dgv";
+            this.dgv.Size = new System.Drawing.Size(676, 445);
+            this.dgv.TabIndex = 4;
+            this.dgv.DragDrop += new System.Windows.Forms.DragEventHandler(this.dgv_DragDrop);
+            this.dgv.DragEnter += new System.Windows.Forms.DragEventHandler(this.dgv_DragEnter);
+            // 
+            // txtFilter
+            // 
+            this.txtFilter.Location = new System.Drawing.Point(12, 87);
+            this.txtFilter.Name = "txtFilter";
+            this.txtFilter.Size = new System.Drawing.Size(676, 20);
+            this.txtFilter.TabIndex = 0;
+            this.txtFilter.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+            // 
+            // tbxLog
+            // 
+            this.txtLog.Location = new System.Drawing.Point(12, 564);
+            this.txtLog.Multiline = true;
+            this.txtLog.Name = "tbxLog";
+            this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtLog.Size = new System.Drawing.Size(676, 67);
+            this.txtLog.TabIndex = 0;
+            this.txtLog.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(700, 570);
+            this.ClientSize = new System.Drawing.Size(700, 644);
+            this.Controls.Add(this.dgv);
+            this.Controls.Add(this.cbxEnableZTM);
             this.Controls.Add(this.physicalChannelComboBox);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.btnWriteSwitch);
+            this.Controls.Add(this.txtLog);
+            this.Controls.Add(this.txtFilter);
+            this.Controls.Add(this.tbxSwCommand);
             this.Name = "Form1";
             this.Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -75,9 +124,13 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox tbxSwCommand;
+        private System.Windows.Forms.Button btnWriteSwitch;
         private System.Windows.Forms.ComboBox physicalChannelComboBox;
+        private System.Windows.Forms.CheckBox cbxEnableZTM;
+        private System.Windows.Forms.DataGridView dgv;
+        private System.Windows.Forms.TextBox txtFilter;
+        private System.Windows.Forms.TextBox txtLog;
     }
 }
 

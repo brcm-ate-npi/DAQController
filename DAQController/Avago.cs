@@ -1,6 +1,7 @@
 ﻿using NationalInstruments.DAQmx;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace DAQController
@@ -127,41 +128,6 @@ namespace DAQController
 
                 // Clear the channel write need status
                 bool[] ChannelWriteNeeded = new bool[12];
-
-#if false
-                /// O(k+m)
-                int[] desiredChannelValues = new int[12];
-
-                foreach (KeyValuePair<int, int> switchSetting in SwitchPathSettingsDict[site][SwitchPath.dutPort, SwitchPath.instrPort])
-                {
-                    int switchNo = switchSetting.Key;
-                    int switchStatus = switchSetting.Value;
-
-                    int portNo = (switchNo == 48) ? 9 : (int)(switchNo / 8);
-                    int chNo = switchNo % 8;
-
-                    // Update the desired state directly
-                    if (switchStatus == 1)
-                    {
-                        desiredChannelValues[portNo] |= (1 << chNo); // Set the bit
-                    }
-                    else
-                    {
-                        desiredChannelValues[portNo] &= ~(1 << chNo); // Clear the bit
-                    }
-                }
-
-                // Compare and update the actual channel values
-                for (int portNo = 0; portNo < desiredChannelValues.Length; portNo++)
-                {
-                    if (ChannelValue[portNo] != desiredChannelValues[portNo])
-                    {
-                        ChannelValue[portNo] = desiredChannelValues[portNo];
-                        ChannelWriteNeeded[portNo] = true; // Mark for writing if a change is detected
-                    }
-                }
-#endif
-
                 /// O(k)
                 // Iterate and compute the final channel values directly
                 foreach (KeyValuePair<int, int> switchSetting in SwitchSettings)
@@ -169,7 +135,8 @@ namespace DAQController
                     int switchNo = switchSetting.Key;
                     int switchStatus = switchSetting.Value;
 
-                    int portNo = (switchNo == 48) ? 9 : (int)(switchNo / 8);
+                    //int portNo = (switchNo == 48) ? 9 : (int)(switchNo / 8);
+                    int portNo = (int)(switchNo / 8);
                     int chNo = switchNo % 8;
 
                     int channelBitValue = 1 << chNo; // Bit value for the current channel
@@ -235,6 +202,93 @@ namespace DAQController
             }
         }
 
-        
+        public List<KeyValuePair<bool, KeyValuePair<string, int>>> CompareSWPath(string[] inputPath)
+        {
+            List<KeyValuePair<bool, KeyValuePair<string, int>>> isListComparable = new List<KeyValuePair<bool, KeyValuePair<string, int>>>();
+            foreach (var selPath in inputPath)
+            {
+                var sKey = selPath.Split('_')[0];
+                var sVal = int.Parse(selPath.Split('_')[1]);
+
+                if (!SwConfigBefore.Any(s => s.Value.Key == sKey && s.Value.Value == sVal))
+                    isListComparable.Add(new KeyValuePair<bool, KeyValuePair<string, int>>(true, new KeyValuePair<string, int>(sKey, sVal)));
+                else
+                    isListComparable.Add(new KeyValuePair<bool, KeyValuePair<string, int>>(false, new KeyValuePair<string, int>(sKey, sVal)));
+            }
+            return SwConfigBefore = isListComparable;
+        }
+
+        public void ActivatePath(string val)
+        {
+            var currentdata = CompareSWPath(val.Split(';')); //Compare the switch configuration between before and after
+
+            try
+            {
+                foreach (var item in currentdata)
+                {
+                    if (item.Key)
+                    {
+                        switch (item.Value.Key.ToUpper())
+                        {
+                            case "P0":
+                                writerP00.WriteSingleSamplePort(true, item.Value.Value);
+                                break;
+
+                            case "P1":
+                                writerP01.WriteSingleSamplePort(true, item.Value.Value);
+                                break;
+
+                            case "P2":
+                                writerP02.WriteSingleSamplePort(true, item.Value.Value);
+                                break;
+
+                            case "P3":
+                                writerP03.WriteSingleSamplePort(true, item.Value.Value);
+                                break;
+
+                            case "P4":
+                                writerP04.WriteSingleSamplePort(true, item.Value.Value);
+                                break;
+
+                            case "P5":
+                                writerP05.WriteSingleSamplePort(true, item.Value.Value);
+                                break;
+
+                            case "P6":
+                                writerP06.WriteSingleSamplePort(true, item.Value.Value);
+                                break;
+
+                            case "P7":
+                                writerP07.WriteSingleSamplePort(true, item.Value.Value);
+                                break;
+
+                            case "P8":
+                                writerP08.WriteSingleSamplePort(true, item.Value.Value);
+                                break;
+
+                            case "P9":
+                                writerP09.WriteSingleSamplePort(true, item.Value.Value);
+                                break;
+
+                            case "P10":
+                                writerP10.WriteSingleSamplePort(true, item.Value.Value);
+                                break;
+
+                            case "P11":
+                                writerP11.WriteSingleSamplePort(true, item.Value.Value);
+                                break;
+
+                            default:
+                                MessageBox.Show("Port No : " + item.Value.Value, "Only P0,P1,P2,P3,P4,P5 AND P9,P10,P11 ALLOWED !!!!\n" + "Pls check your switching configuration in Input Folder");
+                                break;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("NI6509 DIO Error : SetPath -> " + ex.Message);
+            }
+        }
     }
 }
