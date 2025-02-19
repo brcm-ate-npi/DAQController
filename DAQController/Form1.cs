@@ -24,6 +24,7 @@ namespace DAQController
             InitializeComponent();
 
             physicalChannelComboBox.Items.AddRange(DaqSystem.Local.Devices);
+
             if (physicalChannelComboBox.Items.Count > 0)
                 physicalChannelComboBox.SelectedIndex = 0;
 
@@ -35,10 +36,6 @@ namespace DAQController
             dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgv.CellDoubleClick += dgv_CellDoubleClick;
-
-            EqNA = (EqNetworkAnalyzerBase)EqNetworkAnalyzerBase.EquipmentOpen("TCPIP0::localhost::hislip0::instr", 0);
-            var idn = EqNA.ReadCommand("*idn?");
-            AppendLog($"Network instrument= {idn}");
 
             EnableDoubleBuffering(dgv);
         }
@@ -194,6 +191,20 @@ namespace DAQController
         {
             if (e.Control && e.KeyCode == Keys.Enter)
             {
+                if (EqNA == null)
+                {
+                    EqNA = (EqNetworkAnalyzerBase)EqNetworkAnalyzerBase.EquipmentOpen("TCPIP0::localhost::hislip0::instr", 0);
+                    EqNA.SetTimeOut(1000);
+
+                    var idn = EqNA.ReadCommand("*idn?");
+                    if (string.IsNullOrWhiteSpace(idn))
+                    {
+                        EqNA = null;
+                        return;
+                    }
+                    AppendLog($"Network instrument= {idn}");
+                }
+
                 TextBox textBox = sender as TextBox;
                 if (textBox != null)
                 {
