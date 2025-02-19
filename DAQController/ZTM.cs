@@ -65,6 +65,8 @@ namespace DAQController
                         bSwitchState = false;
                 }
 
+                bAvaliable = true;
+
                 return 1;
             }
             catch (Exception ex)

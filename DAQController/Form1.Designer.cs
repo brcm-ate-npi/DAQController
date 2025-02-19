@@ -85,6 +85,7 @@
             this.dgv.TabIndex = 4;
             this.dgv.DragDrop += new System.Windows.Forms.DragEventHandler(this.dgv_DragDrop);
             this.dgv.DragEnter += new System.Windows.Forms.DragEventHandler(this.dgv_DragEnter);
+            this.dgv.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgv_KeyDown);
             // 
             // txtFilter
             // 

@@ -223,5 +223,27 @@ namespace DAQController
         {
             return textBox.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
         }
+
+        private void dgv_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.Enter)
+            {
+                DataGridView mydgv = sender as DataGridView;
+                if (mydgv != null)
+                {
+                    if (mydgv.SelectedRows.Count > 0)
+                    {
+                        string value = dgv.Rows[mydgv.SelectedRows[0].Index].Cells[1].Value?.ToString();
+                        if (!string.IsNullOrEmpty(value))
+                        {
+                            Clipboard.SetText(value);
+                            tbxSwCommand.Text = value;
+                            btnWriteSwitch_Click(null, null);
+                        }
+                    }
+                }
+                e.SuppressKeyPress = true;
+            }
+        }
     }
 }
