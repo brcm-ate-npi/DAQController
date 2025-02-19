@@ -208,7 +208,11 @@ namespace DAQController
                             AppendLog($"[SCPI-Read] {rdback}");
                         }
                         else
+                        {
                             EqNA.SendCommand(line);
+                        }
+
+                        EqNA.OperationComplete();
                     }
                 }
                 e.SuppressKeyPress = true;
