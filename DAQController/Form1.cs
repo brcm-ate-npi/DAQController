@@ -1,4 +1,5 @@
-﻿using NationalInstruments.DAQmx;
+﻿using LibNaDriver;
+using NationalInstruments.DAQmx;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,6 +13,7 @@ namespace DAQController
     {
         private Avago SwDIO;
         public ZTM SwZTM;
+        private EqNetworkAnalyzerBase EqNA;
 
         private string sw1_name;
         private BindingSource bindingSource;
@@ -33,6 +35,10 @@ namespace DAQController
             dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgv.CellDoubleClick += dgv_CellDoubleClick;
+
+            EqNA = (EqNetworkAnalyzerBase)EqNetworkAnalyzerBase.EquipmentOpen("TCPIP0::localhost::hislip0::instr", 0);
+            var idn = EqNA.ReadCommand("*idn?");
+            AppendLog($"Network instrument= {idn}");
 
             EnableDoubleBuffering(dgv);
         }
@@ -103,7 +109,9 @@ namespace DAQController
             }
             else
             {
-                var filteredData = originalData.Where(kvp => kvp.Key.ToLower().Contains(filterText)).ToList();
+                var tt = filterText.Split(',', ' ').Select(s => s.ToLower());
+
+                var filteredData = originalData.Where(kvp => tt.All(v => kvp.Key.ToLower().Contains(v))).ToList(); // kvp.Key.ToLower().Contains(filterText)
                 bindingSource.DataSource = new BindingList<KeyValuePair<string, string>>(filteredData);
             }
         }
@@ -180,6 +188,36 @@ namespace DAQController
                 txtLog.SelectionStart = txtLog.Text.Length;
                 txtLog.ScrollToCaret();
             }
+        }
+
+        private void txtSCPI_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.Enter)
+            {
+                TextBox textBox = sender as TextBox;
+                if (textBox != null)
+                {
+                    string[] lines = GetLinesFromTextBox(textBox);
+                    foreach (string line in lines)
+                    {
+                        AppendLog($"[SCPI-Write] {line}");
+
+                        if (line.Contains("?"))
+                        {
+                            var rdback = EqNA.ReadCommand(line);
+                            AppendLog($"[SCPI-Read] {rdback}");
+                        }
+                        else
+                            EqNA.SendCommand(line);
+                    }
+                }
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private string[] GetLinesFromTextBox(TextBox textBox)
+        {
+            return textBox.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
         }
     }
 }

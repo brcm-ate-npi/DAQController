@@ -35,23 +35,25 @@
             this.dgv = new System.Windows.Forms.DataGridView();
             this.txtFilter = new System.Windows.Forms.TextBox();
             this.txtLog = new System.Windows.Forms.TextBox();
+            this.txtSCPI = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
             this.SuspendLayout();
             // 
             // tbxSwCommand
             // 
-            this.tbxSwCommand.Location = new System.Drawing.Point(12, 38);
+            this.tbxSwCommand.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbxSwCommand.Location = new System.Drawing.Point(12, 41);
             this.tbxSwCommand.Name = "tbxSwCommand";
-            this.tbxSwCommand.Size = new System.Drawing.Size(558, 20);
+            this.tbxSwCommand.Size = new System.Drawing.Size(558, 22);
             this.tbxSwCommand.TabIndex = 0;
             // 
             // btnWriteSwitch
             // 
-            this.btnWriteSwitch.Location = new System.Drawing.Point(588, 38);
+            this.btnWriteSwitch.Location = new System.Drawing.Point(576, 41);
             this.btnWriteSwitch.Name = "btnWriteSwitch";
-            this.btnWriteSwitch.Size = new System.Drawing.Size(100, 29);
+            this.btnWriteSwitch.Size = new System.Drawing.Size(112, 22);
             this.btnWriteSwitch.TabIndex = 1;
-            this.btnWriteSwitch.Text = "Write";
+            this.btnWriteSwitch.Text = "Send Switch";
             this.btnWriteSwitch.UseVisualStyleBackColor = true;
             this.btnWriteSwitch.Click += new System.EventHandler(this.btnWriteSwitch_Click);
             // 
@@ -92,25 +94,35 @@
             this.txtFilter.TabIndex = 0;
             this.txtFilter.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
             // 
-            // tbxLog
+            // txtLog
             // 
             this.txtLog.Location = new System.Drawing.Point(12, 564);
             this.txtLog.Multiline = true;
-            this.txtLog.Name = "tbxLog";
+            this.txtLog.Name = "txtLog";
             this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtLog.Size = new System.Drawing.Size(676, 67);
+            this.txtLog.Size = new System.Drawing.Size(1244, 125);
             this.txtLog.TabIndex = 0;
-            this.txtLog.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+            // 
+            // txtSCPI
+            // 
+            this.txtSCPI.Location = new System.Drawing.Point(694, 87);
+            this.txtSCPI.Multiline = true;
+            this.txtSCPI.Name = "txtSCPI";
+            this.txtSCPI.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtSCPI.Size = new System.Drawing.Size(562, 471);
+            this.txtSCPI.TabIndex = 0;
+            this.txtSCPI.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSCPI_KeyDown);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(700, 644);
+            this.ClientSize = new System.Drawing.Size(1268, 695);
             this.Controls.Add(this.dgv);
             this.Controls.Add(this.cbxEnableZTM);
             this.Controls.Add(this.physicalChannelComboBox);
             this.Controls.Add(this.btnWriteSwitch);
+            this.Controls.Add(this.txtSCPI);
             this.Controls.Add(this.txtLog);
             this.Controls.Add(this.txtFilter);
             this.Controls.Add(this.tbxSwCommand);
@@ -131,6 +143,7 @@
         private System.Windows.Forms.DataGridView dgv;
         private System.Windows.Forms.TextBox txtFilter;
         private System.Windows.Forms.TextBox txtLog;
+        private System.Windows.Forms.TextBox txtSCPI;
     }
 }
 
