@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace DAQController
 {
@@ -157,6 +158,43 @@ namespace DAQController
                         }
                     }
                 }
+                else if (filePath.ToLower().EndsWith(".xml"))
+                {
+                    try
+                    {
+                        XDocument doc = XDocument.Load(filePath);
+
+                        var swConfigsElement = doc.Root.Element("SwConfigs");
+                        if (swConfigsElement != null)
+                        {
+                            string revision = swConfigsElement.Attribute("Revision")?.Value ?? "N/A";
+                            string referenceLevel = swConfigsElement.Attribute("ReferenceLevel")?.Value ?? "N/A";
+                            string sgLevel = swConfigsElement.Attribute("SGLEVEL_for_HMPUCalibration")?.Value ?? "N/A";
+
+                            Console.WriteLine($"Revision: {revision}, ReferenceLevel: {referenceLevel}, SGLEVEL: {sgLevel}");
+                        }
+
+                        var swConfigs = doc.Descendants("SwConfig")
+                                           .Select(e => new
+                                           {
+                                               Site = e.Attribute("site")?.Value,
+                                               InstrPort = e.Attribute("InstrPort")?.Value,
+                                               DutPort = e.Attribute("DutPort")?.Value,
+                                               PortName = e.Attribute("PortName")?.Value,
+                                               Config = e.Attribute("config")?.Value,
+                                               Value = e.Attribute("value")?.Value
+                                           });
+
+                        foreach (var config in swConfigs)
+                        {
+                            newData.Add(new KeyValuePair<string, string>($"{config.InstrPort}_{config.DutPort}_{config.PortName}_{config.Config}", config.Value));
+                            //AppendLog($"Site: {config.Site}, InstrPort: {config.InstrPort}, DutPort: {config.DutPort}, PortName: {config.PortName}, Config: {config.Config}, Value: {config.Value}");
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
 
                 if (newData.Count > 0)
                 {
@@ -223,7 +261,7 @@ namespace DAQController
                             EqNA.SendCommand(line);
                         }
 
-                        EqNA.OperationComplete();
+                        EqNA.Operation_Complete();
                     }
                 }
                 e.SuppressKeyPress = true;
